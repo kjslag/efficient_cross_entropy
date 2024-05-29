@@ -163,6 +163,9 @@ class FusedCrossEntropyLossFunction(torch.autograd.Function):
         # NOTE: if reduction == "mean" we already divide by an appropriate normalization factor in the kernel so we can alway sum here
         loss = loss.sum()
 
+        if divisor == 0:
+            assert loss.isnan(), "TODO loss should be NaN when dividing by zero"
+        
         # Save data for backward
         ctx.in_feat_requires_grad = in_feat.requires_grad
         ctx.proj_weight_requires_grad = proj_weight.requires_grad
